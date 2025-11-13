@@ -16,4 +16,10 @@ class Evaluasi extends Model
         'produktivitas_tim',
         'catatan',
     ];
+
+    // Relasi ke User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
