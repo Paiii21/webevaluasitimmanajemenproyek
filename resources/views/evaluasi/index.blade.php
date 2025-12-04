@@ -14,7 +14,7 @@
             @endif
 
             <a href="{{ route('evaluasi.create') }}"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4 inline-block">
+                class="bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700 mb-4 inline-block">
                 + Tambah Evaluasi
             </a>
 

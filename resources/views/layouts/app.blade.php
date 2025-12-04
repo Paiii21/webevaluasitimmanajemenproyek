@@ -6,36 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Evaluasi Produktivitas') }}</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:300,400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #F5F7FA;
+            /* warna abu lembut */
+            font-family: 'Inter', sans-serif;
+        }
 
+        .header-clean {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .page-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .card-clean {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+    </style>
 </head>
 
-<body class="font-sans bg-black-50 text-black-900 antialiased">
+<body>
 
-    <div class="min-h-screen">
-        @include('layouts.navigation')
+    @include('layouts.navigation')
 
-        @isset($header)
-            <header class="bg-black shadow-md border-b">
-                <div class="max-w-7xl mx-auto py-6 px-6">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
+    @isset($header)
+        <div class="header-clean">
+            <div class="page-wrapper">
+                {{ $header }}
+            </div>
+        </div>
+    @endisset
 
-        <main class="max-w-7xl mx-auto px-6 py-8">
-            {{ $slot }}
-        </main>
-    </div>
+    <main class="page-wrapper">
+        {{ $slot }}
+    </main>
 
 </body>
 

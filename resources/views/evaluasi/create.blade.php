@@ -38,7 +38,7 @@
                     <textarea name="catatan" rows="3" class="w-full p-2 border rounded"></textarea>
                 </div>
 
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                <button type="submit" class="bg-blue-600 text-gray px-4 py-2 rounded hover:bg-blue-700">
                     Simpan Evaluasi
                 </button>
             </form>
