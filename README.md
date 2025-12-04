@@ -39,10 +39,11 @@ Website ini bertujuan untuk memperkenalkan keindahan dan potensi wisata Sulawesi
 
 | Peran | Nama | Tanggung Jawab |
 |-------|------|----------------|
-| **Project Manager** | Halim | Koordinasi tim, pengawasan timeline, dokumentasi proyek |
-| **Frontend Developer** | Fitri | Implementasi tampilan web menggunakan Blade dan Bootstrap |
-| **Backend Developer** | Aqilah | Pembuatan fitur CRUD dan pengelolaan data tempat wisata |
-| **UI/UX Designer** | Ari | Mendesain tampilan dan pengalaman pengguna di Figma |
+| **Project Manager** | Fahri Alamsyah_F55123099 | Koordinasi tim, pengawasan timeline, dokumentasi proyek |
+| **Frontend Developer** | Fahri Alamsyah_F55123099 | Implementasi tampilan web menggunakan Blade dan Bootstrap |
+| **Backend Developer** | Muh. Al Faiz_F55123085 | Pembuatan fitur CRUD dan pengelolaan data tempat wisata |
+| **UI/UX Designer** | Rayyan Nazmuddin_F55123076 | Mendesain tampilan dan pengalaman pengguna di Figma |
+| **Database Enginer** | Dede Fauzan_F55123089 | Membuat dan mengontrol database |
 
 ---
 
