@@ -1,4 +1,4 @@
-# ManajemenProyek_A_Just-Celebes
+# ManajemenProyek_A_SistemEvaluasiTim
 
 ###  Just Celebes
 **Just Celebes** adalah aplikasi web berbasis Laravel yang menampilkan dan mengelola daftar tempat wisata yang ada di wilayah Sulawesi.  
