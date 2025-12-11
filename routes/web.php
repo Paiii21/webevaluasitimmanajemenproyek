@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EvaluasiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
@@ -15,7 +14,7 @@ Route::get('/', function () {
 // === Halaman Dashboard & Fitur Proyek (utama untuk sistem baru) ===
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', [EvaluasiController::class, 'index'])
+    Route::get('/dashboard', [ProjectController::class, 'index'])
         ->name('dashboard');
 
     // Rute untuk manajemen proyek
