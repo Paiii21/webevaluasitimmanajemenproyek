@@ -9,12 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ManagerController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('role:manager');
-    }
-
     /**
      * Display a listing of the evaluations for teams managed by the manager.
      */

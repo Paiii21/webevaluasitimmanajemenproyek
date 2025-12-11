@@ -8,11 +8,6 @@ use App\Models\Evaluasi;
 
 class EvaluasiController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     // Tampilkan semua data evaluasi (Dashboard)
     public function index()
     {

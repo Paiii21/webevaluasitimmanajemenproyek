@@ -15,6 +15,12 @@
                     <x-nav-link :href="route('evaluasi.index')" :active="request()->routeIs('evaluasi.index')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @if(auth()->user()->isManager() || auth()->user()->isAdmin())
+                        <x-nav-link :href="route('manager.index')" :active="request()->routeIs('manager.*')">
+                            {{ __('Evaluasi Tim') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -77,6 +83,12 @@
             <x-responsive-nav-link :href="route('evaluasi.index')" :active="request()->routeIs('evaluasi.index')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @if(auth()->user()->isManager() || auth()->user()->isAdmin())
+                <x-responsive-nav-link :href="route('manager.index')" :active="request()->routeIs('manager.*')">
+                    {{ __('Evaluasi Tim') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

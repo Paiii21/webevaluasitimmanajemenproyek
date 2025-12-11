@@ -1,47 +1,41 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-            Tambah Evaluasi Tim
+            Edit Evaluasi Tim
         </h2>
     </x-slot>
 
     <div class="py-6 max-w-2xl mx-auto">
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            @if (session('success'))
-                <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('evaluasi.store') }}">
+            <form action="{{ route('manager.update', $evaluasi) }}" method="POST">
                 @csrf
+                @method('PUT')
 
-                @if(auth()->user()->isManager() || auth()->user()->isAdmin())
-                    <div class="mb-4">
-                        <label for="user_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Pilih User *
-                        </label>
-                        <select name="user_id" id="user_id"
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                            <option value="">Pilih user...</option>
-                            @foreach(App\Models\User::where('role', 'user')->get() as $user)
-                                <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                    {{ $user->name }} ({{ $user->email }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('user_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                @endif
+                <div class="mb-4">
+                    <label for="user_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Pilih User *
+                    </label>
+                    <select name="user_id" id="user_id" 
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        required>
+                        <option value="">Pilih user...</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}" {{ old('user_id', $evaluasi->user_id) == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }} ({{ $user->email }})
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('user_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
 
                 <div class="mb-4">
                     <label for="nama_tim" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Nama Tim *
                     </label>
-                    <input type="text" name="nama_tim" id="nama_tim"
-                        value="{{ old('nama_tim') }}"
+                    <input type="text" name="nama_tim" id="nama_tim" 
+                        value="{{ old('nama_tim', $evaluasi->nama_tim) }}"
                         class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required>
                     @error('nama_tim')
@@ -54,8 +48,8 @@
                         <label for="efektivitas_sistem" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Efektivitas Sistem (1-10) *
                         </label>
-                        <input type="number" name="efektivitas_sistem" id="efektivitas_sistem"
-                            value="{{ old('efektivitas_sistem', 5) }}"
+                        <input type="number" name="efektivitas_sistem" id="efektivitas_sistem" 
+                            value="{{ old('efektivitas_sistem', $evaluasi->efektivitas_sistem) }}"
                             min="1" max="10"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             required>
@@ -68,8 +62,8 @@
                         <label for="produktivitas_tim" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Produktivitas Tim (1-10) *
                         </label>
-                        <input type="number" name="produktivitas_tim" id="produktivitas_tim"
-                            value="{{ old('produktivitas_tim', 5) }}"
+                        <input type="number" name="produktivitas_tim" id="produktivitas_tim" 
+                            value="{{ old('produktivitas_tim', $evaluasi->produktivitas_tim) }}"
                             min="1" max="10"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             required>
@@ -83,22 +77,22 @@
                     <label for="catatan" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Catatan
                     </label>
-                    <textarea name="catatan" id="catatan"
+                    <textarea name="catatan" id="catatan" 
                         rows="4"
-                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('catatan') }}</textarea>
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('catatan', $evaluasi->catatan) }}</textarea>
                     @error('catatan')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="flex space-x-3">
-                    <a href="{{ route('evaluasi.index') }}"
+                    <a href="{{ route('manager.index') }}"
                         class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                         Batal
                     </a>
                     <button type="submit"
                         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        Simpan Evaluasi
+                        Update Evaluasi
                     </button>
                 </div>
             </form>
