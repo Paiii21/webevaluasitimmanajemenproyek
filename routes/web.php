@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EvaluasiController;
-use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
@@ -45,19 +44,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/', [ProjectEvaluationController::class, 'store'])->name('store');
             Route::get('/{projectEvaluation}', [ProjectEvaluationController::class, 'show'])->name('show');
         });
-    });
-});
-
-// === Halaman untuk Manager (lama) ===
-Route::middleware(['auth', 'role:manager'])->group(function () {
-    Route::prefix('manager')->name('manager.')->group(function () {
-        Route::get('/', [ManagerController::class, 'index'])->name('index');
-        Route::get('/tambah', [ManagerController::class, 'create'])->name('create');
-        Route::post('/simpan', [ManagerController::class, 'store'])->name('store');
-        Route::get('/{evaluasi}', [ManagerController::class, 'show'])->name('show');
-        Route::get('/{evaluasi}/edit', [ManagerController::class, 'edit'])->name('edit');
-        Route::put('/{evaluasi}', [ManagerController::class, 'update'])->name('update');
-        Route::delete('/{evaluasi}', [ManagerController::class, 'destroy'])->name('destroy');
     });
 });
 
