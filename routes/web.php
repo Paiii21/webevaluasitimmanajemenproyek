@@ -15,8 +15,24 @@ Route::get('/', function () {
 // === Halaman Dashboard & Fitur Proyek (utama untuk sistem baru) ===
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', [ProjectController::class, 'index'])
-        ->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    // Tim
+    Route::get('/tim', function () {
+        return view('team.index');
+    })->name('team.index');
+
+    // Evaluasi
+    Route::get('/evaluasi', function () {
+        return view('evaluations.index');
+    })->name('evaluations.index');
+
+    // Laporan
+    Route::get('/laporan', function () {
+        return view('reports.index');
+    })->name('reports.index');
 
     // Rute untuk manajemen proyek
     Route::prefix('projects')->name('projects.')->group(function () {
@@ -44,6 +60,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/create', [ProjectEvaluationController::class, 'create'])->name('create');
             Route::post('/', [ProjectEvaluationController::class, 'store'])->name('store');
             Route::get('/{projectEvaluation}', [ProjectEvaluationController::class, 'show'])->name('show');
+            Route::get('/{projectEvaluation}/edit', [ProjectEvaluationController::class, 'edit'])->name('edit');
+            Route::put('/{projectEvaluation}', [ProjectEvaluationController::class, 'update'])->name('update');
+            Route::delete('/{projectEvaluation}', [ProjectEvaluationController::class, 'destroy'])->name('destroy');
         });
     });
 });

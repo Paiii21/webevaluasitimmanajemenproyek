@@ -1,86 +1,183 @@
-<x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200">
-        <div
-            class="relative w-full max-w-md bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl border border-blue-100 p-10 transition-all duration-500 hover:shadow-blue-300/50">
-
-            <!-- Efek Glow -->
-            <div
-                class="absolute inset-0 rounded-3xl bg-gradient-to-tr from-blue-300/10 via-transparent to-purple-300/10 blur-3xl -z-10">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'Laravel') }} - Masuk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        .hero-pattern {
+            background: radial-gradient(circle at top right, rgba(0, 0, 0, 0.05) 0%, transparent 50%), 
+                        radial-gradient(circle at bottom left, rgba(0, 0, 0, 0.05) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased bg-gradient-to-br from-white to-gray-50 dark:from-gray-950 dark:to-black min-h-screen">
+    <div class="min-h-screen hero-pattern flex flex-col">
+        <!-- Navigation -->
+        <nav class="bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="h-8 w-8 rounded-full bg-black dark:bg-white flex items-center justify-center">
+                            <span class="text-white dark:text-black font-bold text-lg">TE</span>
+                        </div>
+                        <span class="ml-2 text-xl font-bold text-gray-900 dark:text-white">{{ config('app.name', 'Laravel') }}</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ url('/') }}" class="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            Beranda
+                        </a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-white dark:text-black px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                Daftar
+                            </a>
+                        @endif
+                    </div>
+                </div>
             </div>
+        </nav>
 
-            <!-- Form -->
-            <form method="POST" action="{{ route('login') }}" class="space-y-6">
-                @csrf
+        <!-- Main Content -->
+        <div class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
+            <div class="w-full max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <!-- Left Side - Benefits -->
+                    <div class="hidden lg:block">
+                        <h2 class="text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+                            Akses Sistem Evaluasi Tim
+                        </h2>
+                        <p class="text-xl text-gray-600 dark:text-gray-400 mb-12">
+                            Kelola kinerja tim Anda dengan platform terpadu yang mudah digunakan dan powerful.
+                        </p>
+                        
+                        <div class="space-y-8">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mr-4">
+                                    <svg class="w-6 h-6 text-black dark:text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Evaluasi Real-time</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-2">Monitor kinerja tim secara langsung</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mr-4">
+                                    <svg class="w-6 h-6 text-black dark:text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Data Analytics</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-2">Insight mendalam untuk keputusan lebih baik</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mr-4">
+                                    <svg class="w-6 h-6 text-black dark:text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Kolaborasi Mudah</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-2">Kerja sama tim yang lebih efektif</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Username -->
-                <div class="transition-all duration-300 transform hover:scale-[1.02]">
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
-                    <div
-                        class="flex items-center border-2 border-blue-400 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400 bg-white/70">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-6 8a6 6 0 1112 0H4z" />
-                        </svg>
-                        <input id="email" type="text" name="email" required autofocus
-                            class="w-full bg-transparent outline-none text-gray-800 placeholder-gray-400"
-                            placeholder="Masukkan Username" />
+                    <!-- Right Side - Form -->
+                    <div>
+                        <h1 class="text-5xl font-bold text-gray-900 dark:text-white mb-4">Masuk</h1>
+                        <p class="text-xl text-gray-600 dark:text-gray-400 mb-12">Selamat datang kembali</p>
+
+                        <form method="POST" action="{{ route('login') }}" class="space-y-6 max-w-md">
+                            @csrf
+
+                            <div>
+                                <label for="email" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Email atau Username</label>
+                                <input 
+                                    id="email" 
+                                    type="email" 
+                                    name="email" 
+                                    value="{{ old('email') }}"
+                                    required 
+                                    autofocus
+                                    class="w-full px-4 py-4 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:ring-2 focus:ring-black focus:border-transparent transition-colors" 
+                                    placeholder="nama@email.com"
+                                />
+                                @error('email')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Password</label>
+                                <input 
+                                    id="password" 
+                                    type="password" 
+                                    name="password" 
+                                    required
+                                    class="w-full px-4 py-4 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:ring-2 focus:ring-black focus:border-transparent transition-colors" 
+                                    placeholder="••••••••"
+                                />
+                                @error('password')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <label for="remember" class="flex items-center">
+                                    <input 
+                                        id="remember" 
+                                        type="checkbox" 
+                                        name="remember"
+                                        class="w-4 h-4 text-black dark:text-white rounded border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-black"
+                                    />
+                                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Ingat saya</span>
+                                </label>
+                                @if (Route::has('password.request'))
+                                    <a href="{{ route('password.request') }}" class="text-sm text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 font-semibold transition-colors">
+                                        Lupa password?
+                                    </a>
+                                @endif
+                            </div>
+
+                            <button 
+                                type="submit"
+                                class="w-full bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-100 text-white dark:text-black font-semibold py-4 rounded-lg transition-colors shadow-lg hover:shadow-xl text-lg"
+                            >
+                                Masuk
+                            </button>
+                        </form>
+
+                        <div class="relative my-10">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-300 dark:border-gray-700"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white dark:bg-black text-gray-500 dark:text-gray-400">Belum punya akun?</span>
+                            </div>
+                        </div>
+
+                        <a 
+                            href="{{ route('register') }}"
+                            class="block w-full max-w-md text-center border-2 border-black dark:border-white text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 font-semibold py-4 rounded-lg transition-colors text-lg"
+                        >
+                            Daftar Sekarang
+                        </a>
                     </div>
                 </div>
-
-                <!-- Password -->
-                <div class="transition-all duration-300 transform hover:scale-[1.02]">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                    <div
-                        class="flex items-center border-2 border-blue-400 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400 bg-white/70">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 2a6 6 0 016 6v2h1a1 1 0 011 1v7a2 2 0 01-2 2H4a2 2 0 01-2-2v-7a1 1 0 011-1h1V8a6 6 0 016-6zm-4 8V8a4 4 0 118 0v2H6z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <input id="password" type="password" name="password" required
-                            class="w-full bg-transparent outline-none text-gray-800 placeholder-gray-400"
-                            placeholder="Masukkan Password" />
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 text-gray-400 ml-2 hover:text-blue-500 cursor-pointer transition"
-                            viewBox="0 0 20 20" fill="currentColor">
-                            <path
-                                d="M2.94 6.34A10.97 10.97 0 0110 3c3.87 0 7.2 2.13 9.06 5.34a1 1 0 010 .96A10.97 10.97 0 0110 17a10.97 10.97 0 01-7.06-3.7 1 1 0 010-.96z" />
-                        </svg>
-                    </div>
-                    <div class="text-right mt-2">
-                        <a href="#"
-                            class="text-red-600 text-sm font-semibold hover:underline hover:text-red-700 transition">Lupa
-                            Kata Sandi ?</a>
-                    </div>
-                </div>
-
-                <!-- Tombol -->
-                <button type="submit"
-                    class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-blue-400/50 transition-all duration-300 transform hover:-translate-y-0.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20"
-                        fill="currentColor">
-                        <path
-                            d="M3 10a1 1 0 011-1h8a1 1 0 010 2H4a1 1 0 01-1-1zm10-5a1 1 0 00-1-1h-1V2a1 1 0 10-2 0v2H8a1 1 0 000 2h1v2a1 1 0 102 0V6h1a1 1 0 001-1z" />
-                    </svg>
-                    <span>Masuk</span>
-                </button>
-
-                <!-- Link daftar -->
-                <div class="text-center text-gray-500 text-sm mt-6 animate-fadeIn">
-                    Belum punya akun?
-                    <a href="{{ route('register') }}"
-                        class="text-blue-600 font-semibold hover:underline hover:text-blue-800 transition">Daftar
-                        disini</a>
-                </div>
-            </form>
-
-            <!-- Divider -->
-            <div class="flex items-center mt-10">
-                <div class="flex-grow border-t border-gray-300"></div>
-                <span class="mx-3 text-gray-400 text-sm">Menu Lainnya</span>
-                <div class="flex-grow border-t border-gray-300"></div>
             </div>
         </div>
     </div>
-</x-guest-layout>
+</body>
+</html>

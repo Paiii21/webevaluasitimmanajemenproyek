@@ -34,9 +34,11 @@ class ProjectEvaluationController extends Controller
         // Authorize that the user can create project evaluations
         $this->authorizeProjectManagement($project);
 
-        $project->load('projectMembers.user');
+        $projectMembers = $project->projectMembers()
+            ->with('user')
+            ->get();
 
-        return view('projects.evaluations.create', compact('project'));
+        return view('projects.evaluations.create', compact('project', 'projectMembers'));
     }
 
     /**
@@ -48,17 +50,16 @@ class ProjectEvaluationController extends Controller
         $this->authorizeProjectManagement($project);
 
         $request->validate([
-            'team_member_id' => 'required|exists:project_members,user_id,project_id,' . $project->id,
-            'nama_tim' => 'required|string|max:255',
-            'efektivitas_sistem' => 'required|integer|min:1|max:10',
-            'produktivitas_tim' => 'required|integer|min:1|max:10',
+            'team_member_id' => 'required|exists:users,id',
+            'produktivitas_tim' => 'required|integer|min:0|max:100',
+            'efektivitas_sistem' => 'required|integer|min:0|max:100',
             'catatan' => 'nullable|string',
         ]);
 
         $project->projectEvaluations()->create([
             'evaluator_id' => Auth::id(),
             'team_member_id' => $request->team_member_id,
-            'nama_tim' => $request->nama_tim,
+            'nama_tim' => 'Tim Kerja',
             'efektivitas_sistem' => $request->efektivitas_sistem,
             'produktivitas_tim' => $request->produktivitas_tim,
             'catatan' => $request->catatan,
@@ -82,8 +83,87 @@ class ProjectEvaluationController extends Controller
         }
 
         $projectEvaluation->load(['evaluator', 'teamMember']);
+        
+        return view('projects.evaluations.show', [
+            'project' => $project,
+            'evaluation' => $projectEvaluation
+        ]);
+    }
 
-        return view('projects.evaluations.show', compact('project', 'projectEvaluation'));
+    /**
+     * Show the form for editing the resource.
+     */
+    public function edit(Project $project, ProjectEvaluation $projectEvaluation)
+    {
+        // Authorize that the user can manage the project
+        $this->authorizeProjectManagement($project);
+
+        // Make sure the evaluation belongs to the project
+        if ($projectEvaluation->project_id !== $project->id) {
+            abort(404, 'Evaluation not found in this project');
+        }
+
+        $projectMembers = $project->projectMembers()
+            ->with('user')
+            ->get();
+
+        $projectEvaluation->load(['teamMember']);
+
+        return view('projects.evaluations.edit', [
+            'project' => $project,
+            'evaluation' => $projectEvaluation,
+            'projectMembers' => $projectMembers
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Project $project, ProjectEvaluation $projectEvaluation)
+    {
+        // Authorize that the user can manage the project
+        $this->authorizeProjectManagement($project);
+
+        // Make sure the evaluation belongs to the project
+        if ($projectEvaluation->project_id !== $project->id) {
+            abort(404, 'Evaluation not found in this project');
+        }
+
+        $request->validate([
+            'team_member_id' => 'required|exists:users,id',
+            'produktivitas_tim' => 'required|integer|min:0|max:100',
+            'efektivitas_sistem' => 'required|integer|min:0|max:100',
+            'catatan' => 'nullable|string',
+        ]);
+
+        $projectEvaluation->update([
+            'team_member_id' => $request->team_member_id,
+            'produktivitas_tim' => $request->produktivitas_tim,
+            'efektivitas_sistem' => $request->efektivitas_sistem,
+            'catatan' => $request->catatan,
+        ]);
+
+        return redirect()->route('projects.evaluations.show', [$project, $projectEvaluation])
+            ->with('success', 'Evaluasi berhasil diperbarui!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Project $project, ProjectEvaluation $projectEvaluation)
+    {
+        // Authorize that the user can manage the project
+        $this->authorizeProjectManagement($project);
+
+        // Make sure the evaluation belongs to the project
+        if ($projectEvaluation->project_id !== $project->id) {
+            abort(404, 'Evaluation not found in this project');
+        }
+
+        $projectEvaluation->delete();
+
+        return redirect()->route('projects.evaluations.index', $project)
+            ->with('success', 'Evaluasi berhasil dihapus!');
     }
 
     /**
