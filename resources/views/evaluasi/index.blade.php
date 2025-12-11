@@ -1,130 +1,50 @@
 <x-app-layout>
     <x-slot name="header">
-        @if(auth()->user()->isManager() || auth()->user()->isAdmin())
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-                Dashboard Evaluasi Tim (Manager)
-            </h2>
-        @else
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-                Dashboard Evaluasi Produktivitas Tim
-            </h2>
-        @endif
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
+            Dashboard Evaluasi
+        </h2>
     </x-slot>
 
     <div class="py-6 max-w-5xl mx-auto">
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            @if (session('success'))
-                <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
+            <div class="text-center py-12">
+                <div class="text-gray-400 mb-4 text-5xl">📁</div>
+                <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Sistem Evaluasi Berbasis Proyek</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+                    Evaluasi tim kini dikelola berdasarkan proyek. Buat proyek baru untuk mulai mengelola tim dan melakukan evaluasi kinerja.
+                </p>
 
-            @if(auth()->user()->isManager() || auth()->user()->isAdmin())
-                <!-- Manager view - show all evaluations with user names and actions -->
-                <div class="flex justify-between items-center mb-4">
-                    <a href="{{ route('manager.create') }}"
-                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block">
-                        + Tambah Evaluasi
+                <div class="space-y-4">
+                    <a href="{{ route('projects.index') }}"
+                        class="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        Kelola Proyek Saya
                     </a>
 
-                    <div class="text-sm text-gray-600 dark:text-gray-400">
-                        Total Evaluasi: {{ $evaluasis->count() }}
+                    <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Proyek memungkinkan Anda untuk:
+                        </p>
+                        <ul class="mt-3 space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✓</span>
+                                <span>Membuat dan mengelola tim Anda sendiri</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✓</span>
+                                <span>Mengundang anggota tim ke proyek Anda</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✓</span>
+                                <span>Melakukan evaluasi kinerja anggota tim</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✓</span>
+                                <span>Menetapkan peran (manager atau member) untuk anggota tim</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse border">
-                        <thead>
-                            <tr class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                                <th class="border px-3 py-2">Nama Tim</th>
-                                <th class="border px-3 py-2">User</th>
-                                <th class="border px-3 py-2">Efektivitas Sistem</th>
-                                <th class="border px-3 py-2">Produktivitas Tim</th>
-                                <th class="border px-3 py-2">Catatan</th>
-                                <th class="border px-3 py-2">Tanggal</th>
-                                <th class="border px-3 py-2">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($evaluasis as $item)
-                                <tr>
-                                    <td class="border px-3 py-2">{{ $item->nama_tim }}</td>
-                                    <td class="border px-3 py-2">{{ $item->user->name ?? 'N/A' }}</td>
-                                    <td class="border px-3 py-2 text-center">
-                                        <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">
-                                            {{ $item->efektivitas_sistem }}
-                                        </span>
-                                    </td>
-                                    <td class="border px-3 py-2 text-center">
-                                        <span class="px-2 py-1 rounded bg-green-100 text-green-800">
-                                            {{ $item->produktivitas_tim }}
-                                        </span>
-                                    </td>
-                                    <td class="border px-3 py-2 max-w-xs truncate">{{ $item->catatan }}</td>
-                                    <td class="border px-3 py-2 text-center">{{ $item->created_at->format('d M Y') }}</td>
-                                    <td class="border px-3 py-2 text-center">
-                                        <div class="flex space-x-2 justify-center">
-                                            <a href="{{ route('manager.show', $item) }}"
-                                                class="text-blue-600 hover:text-blue-900 text-sm">Lihat</a>
-                                            <a href="{{ route('manager.edit', $item) }}"
-                                                class="text-yellow-600 hover:text-yellow-900 text-sm">Edit</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="border px-3 py-4 text-center text-gray-500">
-                                        Belum ada data evaluasi.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <!-- Regular user view - show only their evaluations -->
-                <a href="{{ route('evaluasi.create') }}"
-                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4 inline-block">
-                    + Tambah Evaluasi
-                </a>
-
-                <table class="w-full border-collapse border mt-4">
-                    <thead>
-                        <tr class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                            <th class="border px-3 py-2">Nama Tim</th>
-                            <th class="border px-3 py-2">Efektivitas Sistem</th>
-                            <th class="border px-3 py-2">Produktivitas Tim</th>
-                            <th class="border px-3 py-2">Catatan</th>
-                            <th class="border px-3 py-2">Tanggal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($evaluasis as $item)
-                            <tr>
-                                <td class="border px-3 py-2">{{ $item->nama_tim }}</td>
-                                <td class="border px-3 py-2 text-center">
-                                    <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">
-                                        {{ $item->efektivitas_sistem }}
-                                    </span>
-                                </td>
-                                <td class="border px-3 py-2 text-center">
-                                    <span class="px-2 py-1 rounded bg-green-100 text-green-800">
-                                        {{ $item->produktivitas_tim }}
-                                    </span>
-                                </td>
-                                <td class="border px-3 py-2">{{ $item->catatan }}</td>
-                                <td class="border px-3 py-2 text-center">{{ $item->created_at->format('d M Y') }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="border px-3 py-4 text-center text-gray-500">
-                                    Belum ada data evaluasi.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            @endif
+            </div>
         </div>
     </div>
 </x-app-layout>
