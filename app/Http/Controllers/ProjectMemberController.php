@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\ProjectMember;
+use App\Models\ProjectInvitation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 
 class ProjectMemberController extends Controller
@@ -21,7 +23,10 @@ class ProjectMemberController extends Controller
 
         $project->load('projectMembers.user');
 
-        return view('projects.members.index', compact('project'));
+        // Get pending invitations for this project
+        $invitations = $project->invitations()->whereNull('accepted_at')->get();
+
+        return view('projects.members.index', compact('project', 'invitations'));
     }
 
     /**
@@ -32,7 +37,10 @@ class ProjectMemberController extends Controller
         // Only project owner or manager can invite members
         $this->authorizeProjectManagement($project);
 
-        return view('projects.members.invite', compact('project'));
+        // Get pending invitations for this project
+        $invitations = $project->invitations()->whereNull('accepted_at')->get();
+
+        return view('projects.members.invite', compact('project', 'invitations'));
     }
 
     /**
@@ -44,32 +52,60 @@ class ProjectMemberController extends Controller
         $this->authorizeProjectManagement($project);
 
         $request->validate([
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required|email',
             'role' => 'required|in:member,manager'
         ]);
 
-        // Find the user by email
-        $user = User::where('email', $request->email)->first();
+        // Check if user already exists in the system
+        $existingUser = User::where('email', $request->email)->first();
 
-        // Check if user is already a member of the project
-        $existingMember = $project->projectMembers()
-            ->where('user_id', $user->id)
-            ->first();
+        if ($existingUser) {
+            // Check if user is already a member of the project
+            $existingMember = $project->projectMembers()
+                ->where('user_id', $existingUser->id)
+                ->first();
 
-        if ($existingMember) {
-            return redirect()->back()
-                ->with('error', 'User sudah menjadi anggota proyek ini.')
-                ->withInput();
+            if ($existingMember) {
+                return redirect()->back()
+                    ->with('error', 'User sudah menjadi anggota proyek ini.')
+                    ->withInput();
+            }
+
+            // Add the existing user to the project
+            $project->projectMembers()->create([
+                'user_id' => $existingUser->id,
+                'role' => $request->role,
+            ]);
+
+            return redirect()->route('projects.members.index', $project)
+                ->with('success', 'Anggota berhasil ditambahkan ke proyek!');
+        } else {
+            // Check if an invitation already exists for this email
+            $existingInvitation = $project->invitations()
+                ->where('email', $request->email)
+                ->whereNull('accepted_at')
+                ->first();
+
+            if ($existingInvitation) {
+                return redirect()->back()
+                    ->with('error', 'Undangan sudah dikirim ke email ini.')
+                    ->withInput();
+            }
+
+            // Create an invitation for unregistered user
+            $invitation = ProjectInvitation::create([
+                'project_id' => $project->id,
+                'email' => $request->email,
+                'inviter_id' => Auth::id(),
+                'role' => $request->role,
+            ]);
+
+            // Here you would send the invitation email (to be implemented)
+            // sendInvitationEmail($invitation);
+
+            return redirect()->route('projects.members.index', $project)
+                ->with('success', 'Undangan berhasil dikirim! Tautan pendaftaran telah dikirim ke email.');
         }
-
-        // Add the user to the project
-        $project->projectMembers()->create([
-            'user_id' => $user->id,
-            'role' => $request->role,
-        ]);
-
-        return redirect()->route('projects.members.index', $project)
-            ->with('success', 'Anggota berhasil diundang ke proyek!');
     }
 
     /**
@@ -118,6 +154,27 @@ class ProjectMemberController extends Controller
 
         return redirect()->route('projects.members.index', $project)
             ->with('success', 'Anggota berhasil dihapus dari proyek!');
+    }
+
+    /**
+     * Remove a pending invitation
+     */
+    public function removeInvitation(Project $project, ProjectInvitation $invitation)
+    {
+        // Only project owner can remove invitations
+        if ($project->owner_id !== Auth::id()) {
+            abort(403, 'Unauthorized to remove invitations');
+        }
+
+        // Ensure invitation belongs to the project
+        if ($invitation->project_id !== $project->id) {
+            abort(403, 'Unauthorized to remove this invitation');
+        }
+
+        $invitation->delete();
+
+        return redirect()->route('projects.members.index', $project)
+            ->with('success', 'Undangan berhasil dibatalkan!');
     }
 
     /**

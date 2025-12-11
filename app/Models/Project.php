@@ -31,4 +31,10 @@ class Project extends Model
     {
         return $this->hasMany(ProjectEvaluation::class);
     }
+
+    // Relationship: Project has many invitations
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(ProjectInvitation::class);
+    }
 }
