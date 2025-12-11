@@ -43,7 +43,7 @@
         </nav>
 
         <!-- Sidebar -->
-        <x-sidebar />
+        @include('components.sidebar')
 
         <!-- Main Content -->
         <div class="ml-64 flex-1 px-4 sm:px-6 lg:px-8 py-12">

@@ -1,152 +1,140 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-            Anggota Proyek: {{ $project->name }}
-        </h2>
-    </x-slot>
-
-    <div class="py-6 max-w-4xl mx-auto">
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            @if (session('success'))
-                <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-                    {{ session('success') }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anggota Proyek - {{ $project->nama_proyek }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-white dark:bg-black text-black dark:text-white transition-colors">
+    <div class="flex h-screen">
+        @include('components.sidebar')
+        
+        <main class="flex-1 ml-64 overflow-auto">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="mb-8">
+                    <a href="{{ route('projects.show', $project) }}" class="inline-flex items-center text-black dark:text-white hover:text-gray-600 dark:hover:text-gray-400 mb-4">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Kembali ke Proyek
+                    </a>
+                    <h1 class="text-4xl font-bold mb-2">Anggota Proyek</h1>
+                    <p class="text-gray-600 dark:text-gray-400">{{ $project->nama_proyek }}</p>
                 </div>
-            @endif
 
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Daftar Anggota</h3>
+                <!-- Success Message -->
+                @if (session('success'))
+                    <div class="mb-6 p-4 border-l-4 border-black dark:border-white bg-gray-50 dark:bg-gray-900">
+                        <p class="text-black dark:text-white">{{ session('success') }}</p>
+                    </div>
+                @endif
 
-                <a href="{{ route('projects.members.invite', $project) }}"
-                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    + Undang Anggota
-                </a>
-            </div>
+                <!-- Action Button -->
+                <div class="mb-8">
+                    <a href="{{ route('projects.members.invite', $project) }}" class="inline-block px-6 py-3 bg-black dark:bg-white text-white dark:text-black font-medium rounded hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
+                        + Undang Anggota
+                    </a>
+                </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full border-collapse border">
-                    <thead>
-                        <tr class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                            <th class="border px-3 py-2">Nama</th>
-                            <th class="border px-3 py-2">Email</th>
-                            <th class="border px-3 py-2">Peran</th>
-                            <th class="border px-3 py-2">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($project->projectMembers as $member)
-                            <tr>
-                                <td class="border px-3 py-2">{{ $member->user->name }}</td>
-                                <td class="border px-3 py-2">{{ $member->user->email }}</td>
-                                <td class="border px-3 py-2">
-                                    <span class="px-2 py-1 rounded text-xs
-                                        @if($member->role === 'owner') bg-purple-100 text-purple-800
-                                        @elseif($member->role === 'manager') bg-blue-100 text-blue-800
-                                        @else bg-gray-100 text-gray-800
-                                        @endif">
-                                        {{ ucfirst($member->role) }}
-                                    </span>
-                                </td>
-                                <td class="border px-3 py-2 text-center">
-                                    @if($project->owner_id == Auth::id() && $member->user_id != Auth::id())
-                                        <div class="flex space-x-2 justify-center">
-                                            <form action="{{ route('projects.members.update-role', [$project, $member]) }}"
-                                                method="POST" class="inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <select name="role"
-                                                    onchange="this.form.submit()"
-                                                    class="text-sm rounded border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                                    <option value="member" {{ $member->role === 'member' ? 'selected' : '' }}>Member</option>
-                                                    <option value="manager" {{ $member->role === 'manager' ? 'selected' : '' }}>Manager</option>
-                                                </select>
-                                            </form>
-                                            <form action="{{ route('projects.members.remove', [$project, $member]) }}"
-                                                method="POST" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="text-red-600 hover:text-red-900 text-sm"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus anggota ini dari proyek?')">
-                                                    Hapus
-                                                </button>
-                                            </form>
+                <!-- Members List -->
+                @if ($project->projectMembers->count() > 0)
+                    <div class="space-y-4 mb-8">
+                        @foreach ($project->projectMembers as $member)
+                            <div class="border border-gray-300 dark:border-gray-700 rounded-lg p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h3 class="text-xl font-semibold text-black dark:text-white">{{ $member->user->name }}</h3>
+                                        <p class="text-gray-600 dark:text-gray-400">{{ $member->user->email }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-block px-3 py-1 rounded text-sm font-medium
+                                            @if($member->role === 'owner') bg-black dark:bg-white text-white dark:text-black
+                                            @elseif($member->role === 'manager') bg-gray-700 dark:bg-gray-300 text-white dark:text-black
+                                            @else bg-gray-200 dark:bg-gray-800 text-black dark:text-white
+                                            @endif">
+                                            {{ ucfirst($member->role) }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Actions -->
+                                @if($project->owner_id == Auth::id() && $member->user_id != Auth::id())
+                                    <div class="flex gap-2">
+                                        <form action="{{ route('projects.members.update-role', [$project, $member]) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <select name="role" onchange="this.form.submit()" class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors">
+                                                <option value="member" {{ $member->role === 'member' ? 'selected' : '' }}>Member</option>
+                                                <option value="manager" {{ $member->role === 'manager' ? 'selected' : '' }}>Manager</option>
+                                            </select>
+                                        </form>
+                                        <form action="{{ route('projects.members.remove', [$project, $member]) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="px-4 py-2 border border-red-600 text-red-600 rounded hover:bg-red-600 hover:text-white transition-colors font-medium">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                @elseif($project->owner_id == Auth::id() && $member->user_id == Auth::id())
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Anda adalah pemilik proyek</p>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-12 border border-gray-300 dark:border-gray-700 rounded-lg mb-8">
+                        <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 12H9m6 0a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">Belum ada anggota</h3>
+                        <p class="text-gray-500 dark:text-gray-500 mb-4">Mulai dengan mengundang anggota pertama ke proyek ini</p>
+                    </div>
+                @endif
+
+                <!-- Pending Invitations -->
+                @if($invitations->count() > 0)
+                    <div class="mt-8">
+                        <h2 class="text-2xl font-bold mb-4">Undangan Tertunda</h2>
+                        <div class="space-y-4">
+                            @foreach($invitations as $invitation)
+                                <div class="border border-gray-300 dark:border-gray-700 rounded-lg p-6">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="text-lg font-semibold text-black dark:text-white">{{ $invitation->email }}</h4>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Dikirim oleh: {{ $invitation->inviter->name }}</p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">Kadaluarsa: {{ $invitation->expires_at->format('d M Y') }}</p>
                                         </div>
-                                    @elseif($project->owner_id == Auth::id() && $member->user_id == Auth::id())
-                                        <span class="text-sm text-gray-500">Tidak dapat diubah</span>
-                                    @else
-                                        <span class="text-sm">-</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="border px-3 py-4 text-center text-gray-500">
-                                    Belum ada anggota dalam proyek ini.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pending Invitations Section -->
-            @if($invitations->count() > 0)
-                <div class="mt-8">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Undangan Tertunda</h3>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse border">
-                            <thead>
-                                <tr class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                                    <th class="border px-3 py-2">Email</th>
-                                    <th class="border px-3 py-2">Peran</th>
-                                    <th class="border px-3 py-2">Dikirim Oleh</th>
-                                    <th class="border px-3 py-2">Kadaluarsa</th>
-                                    <th class="border px-3 py-2">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($invitations as $invitation)
-                                    <tr>
-                                        <td class="border px-3 py-2">{{ $invitation->email }}</td>
-                                        <td class="border px-3 py-2">
-                                            <span class="px-2 py-1 rounded text-xs
-                                                @if($invitation->role === 'manager') bg-blue-100 text-blue-800
-                                                @else bg-gray-100 text-gray-800
+                                        <div class="text-right">
+                                            <span class="inline-block px-3 py-1 rounded text-sm font-medium
+                                                @if($invitation->role === 'manager') bg-gray-700 dark:bg-gray-300 text-white dark:text-black
+                                                @else bg-gray-200 dark:bg-gray-800 text-black dark:text-white
                                                 @endif">
                                                 {{ ucfirst($invitation->role) }}
                                             </span>
-                                        </td>
-                                        <td class="border px-3 py-2">{{ $invitation->inviter->name }}</td>
-                                        <td class="border px-3 py-2 text-center">{{ $invitation->expires_at->format('d M Y') }}</td>
-                                        <td class="border px-3 py-2 text-center">
                                             @if($project->owner_id == Auth::id())
-                                                <form action="{{ route('projects.members.remove-invitation', [$project, $invitation]) }}"
-                                                    method="POST" class="inline">
+                                                <form action="{{ route('projects.members.remove-invitation', [$project, $invitation]) }}" method="POST" class="mt-3" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan undangan ini?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit"
-                                                        class="text-red-600 hover:text-red-900 text-sm"
-                                                        onclick="return confirm('Apakah Anda yakin ingin membatalkan undangan ini?')">
+                                                    <button type="submit" class="px-4 py-2 border border-red-600 text-red-600 rounded hover:bg-red-600 hover:text-white transition-colors font-medium text-sm">
                                                         Batal
                                                     </button>
                                                 </form>
                                             @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-            @endif
-
-            <div class="mt-6">
-                <a href="{{ route('projects.show', $project) }}"
-                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                    Kembali ke Proyek
-                </a>
+                @endif
             </div>
-        </div>
+        </main>
     </div>
-</x-app-layout>
+</body>
+</html>
