@@ -15,8 +15,9 @@ Route::get('/', function () {
 // === Halaman Dashboard & Fitur Proyek (utama untuk sistem baru) ===
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', [ProjectController::class, 'index'])
-        ->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
     // Rute untuk manajemen proyek
     Route::prefix('projects')->name('projects.')->group(function () {
