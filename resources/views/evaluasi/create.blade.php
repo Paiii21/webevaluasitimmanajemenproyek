@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-3xl mx-auto">
+    <div class="py-6 max-w-2xl mx-auto">
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             @if (session('success'))
                 <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
@@ -16,31 +16,91 @@
             <form method="POST" action="{{ route('evaluasi.store') }}">
                 @csrf
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 dark:text-gray-200">Nama Tim</label>
-                    <input type="text" name="nama_tim" class="w-full p-2 border rounded" required>
-                </div>
+                @if(auth()->user()->isManager() || auth()->user()->isAdmin())
+                    <div class="mb-4">
+                        <label for="user_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Pilih User *
+                        </label>
+                        <select name="user_id" id="user_id"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="">Pilih user...</option>
+                            @foreach(App\Models\User::where('role', 'user')->get() as $user)
+                                <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }} ({{ $user->email }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('user_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                @endif
 
                 <div class="mb-4">
-                    <label class="block text-gray-700 dark:text-gray-200">Efektivitas Sistem (1–10)</label>
-                    <input type="number" name="efektivitas_sistem" min="1" max="10" class="w-full p-2 border rounded"
+                    <label for="nama_tim" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Nama Tim *
+                    </label>
+                    <input type="text" name="nama_tim" id="nama_tim"
+                        value="{{ old('nama_tim') }}"
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         required>
+                    @error('nama_tim')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 dark:text-gray-200">Produktivitas Tim (1–10)</label>
-                    <input type="number" name="produktivitas_tim" min="1" max="10" class="w-full p-2 border rounded"
-                        required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="efektivitas_sistem" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Efektivitas Sistem (1-10) *
+                        </label>
+                        <input type="number" name="efektivitas_sistem" id="efektivitas_sistem"
+                            value="{{ old('efektivitas_sistem', 5) }}"
+                            min="1" max="10"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            required>
+                        @error('efektivitas_sistem')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="produktivitas_tim" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Produktivitas Tim (1-10) *
+                        </label>
+                        <input type="number" name="produktivitas_tim" id="produktivitas_tim"
+                            value="{{ old('produktivitas_tim', 5) }}"
+                            min="1" max="10"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            required>
+                        @error('produktivitas_tim')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 dark:text-gray-200">Catatan Tambahan</label>
-                    <textarea name="catatan" rows="3" class="w-full p-2 border rounded"></textarea>
+                <div class="mb-6">
+                    <label for="catatan" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Catatan
+                    </label>
+                    <textarea name="catatan" id="catatan"
+                        rows="4"
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('catatan') }}</textarea>
+                    @error('catatan')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                <button type="submit" class="bg-blue-600 text-gray px-4 py-2 rounded hover:bg-blue-700">
-                    Simpan Evaluasi
-                </button>
+                <div class="flex space-x-3">
+                    <a href="{{ route('evaluasi.index') }}"
+                        class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                        Batal
+                    </a>
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Simpan Evaluasi
+                    </button>
+                </div>
             </form>
         </div>
     </div>
