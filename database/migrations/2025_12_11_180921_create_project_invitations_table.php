@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('role', ['member', 'manager'])->default('member');
             $table->string('token')->unique(); // Unique token for invitation acceptance
             $table->timestamp('accepted_at')->nullable(); // When the invitation was accepted
-            $table->timestamp('expires_at'); // When the invitation expires
+            $table->timestamp('expires_at')->nullable(); // When the invitation expires
             $table->timestamps();
 
             // Foreign key constraints

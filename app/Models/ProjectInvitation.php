@@ -18,11 +18,9 @@ class ProjectInvitation extends Model
         'expires_at',
     ];
 
-    protected $dates = [
-        'expires_at',
-        'accepted_at',
-        'created_at',
-        'updated_at',
+    protected $casts = [
+        'expires_at' => 'datetime',
+        'accepted_at' => 'datetime',
     ];
 
     // Relationship: Invitation belongs to a project

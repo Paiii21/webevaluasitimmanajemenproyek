@@ -35,6 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/invite', [ProjectMemberController::class, 'store'])->name('store');
             Route::put('/{projectMember}', [ProjectMemberController::class, 'updateRole'])->name('update-role');
             Route::delete('/{projectMember}', [ProjectMemberController::class, 'remove'])->name('remove');
+            Route::delete('/invitations/{invitation}', [ProjectMemberController::class, 'removeInvitation'])->name('remove-invitation');
         });
 
         // Rute untuk manajemen evaluasi proyek
