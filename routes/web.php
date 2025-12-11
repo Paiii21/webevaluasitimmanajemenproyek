@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EvaluasiController;
+use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ProfileController;
 
 // Halaman welcome (belum login)
@@ -9,7 +10,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// === Halaman Dashboard & Fitur Evaluasi ===
+// === Halaman Dashboard & Fitur Evaluasi (untuk user biasa) ===
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard (default membawa user ke daftar evaluasi)
@@ -25,8 +26,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('evaluasi.store');
 
     // Detail tim → tampilkan grafik & catatan tambahan
-    Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])
+    Route::get('/evaluasi/{evaluasi}', [EvaluasiController::class, 'show'])
         ->name('evaluasi.show');
+});
+
+// === Halaman untuk Manager ===
+Route::middleware(['auth', 'role:manager'])->group(function () {
+    Route::prefix('manager')->name('manager.')->group(function () {
+        Route::get('/', [ManagerController::class, 'index'])->name('index');
+        Route::get('/tambah', [ManagerController::class, 'create'])->name('create');
+        Route::post('/simpan', [ManagerController::class, 'store'])->name('store');
+        Route::get('/{evaluasi}', [ManagerController::class, 'show'])->name('show');
+        Route::get('/{evaluasi}/edit', [ManagerController::class, 'edit'])->name('edit');
+        Route::put('/{evaluasi}', [ManagerController::class, 'update'])->name('update');
+        Route::delete('/{evaluasi}', [ManagerController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // === Profil User (bawaan Breeze, opsional) ===
