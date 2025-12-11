@@ -28,6 +28,16 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Check if user has a pending invitation
+        $pendingInvitationToken = session('pending_invitation_token');
+        if ($pendingInvitationToken) {
+            // Clear the session token
+            session()->forget('pending_invitation_token');
+
+            // Redirect to invitation acceptance route
+            return redirect()->route('project-invitations.accept', $pendingInvitationToken);
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

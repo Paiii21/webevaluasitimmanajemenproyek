@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\ProjectEvaluationController;
+use App\Http\Controllers\ProjectInvitationController;
 
 // Halaman welcome (belum login)
 Route::get('/', function () {
@@ -34,6 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/invite', [ProjectMemberController::class, 'store'])->name('store');
             Route::put('/{projectMember}', [ProjectMemberController::class, 'updateRole'])->name('update-role');
             Route::delete('/{projectMember}', [ProjectMemberController::class, 'remove'])->name('remove');
+            Route::delete('/invitations/{invitation}', [ProjectMemberController::class, 'removeInvitation'])->name('remove-invitation');
         });
 
         // Rute untuk manajemen evaluasi proyek
@@ -52,6 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+    // Additional routes for project invitations
+    Route::get('/project-invitations/{token}', [ProjectInvitationController::class, 'accept'])
+        ->name('project-invitations.accept');
 
 // === Rute autentikasi (login, register, forgot password, dsb.) ===
 require __DIR__ . '/auth.php';
