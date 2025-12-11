@@ -100,8 +100,8 @@ class ProjectMemberController extends Controller
                 'role' => $request->role,
             ]);
 
-            // Here you would send the invitation email (to be implemented)
-            // sendInvitationEmail($invitation);
+            // Send invitation email
+            \Mail::to($request->email)->send(new \App\Mail\ProjectInvitationMail($invitation));
 
             return redirect()->route('projects.members.index', $project)
                 ->with('success', 'Undangan berhasil dikirim! Tautan pendaftaran telah dikirim ke email.');

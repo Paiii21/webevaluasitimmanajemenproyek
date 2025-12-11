@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\ProjectEvaluationController;
+use App\Http\Controllers\ProjectInvitationController;
 
 // Halaman welcome (belum login)
 Route::get('/', function () {
@@ -52,6 +53,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+    // Additional routes for project invitations
+    Route::get('/project-invitations/{token}', [ProjectInvitationController::class, 'accept'])
+        ->name('project-invitations.accept');
 
 // === Rute autentikasi (login, register, forgot password, dsb.) ===
 require __DIR__ . '/auth.php';
