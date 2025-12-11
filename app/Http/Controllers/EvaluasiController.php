@@ -8,10 +8,22 @@ use App\Models\Evaluasi;
 
 class EvaluasiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     // Tampilkan semua data evaluasi (Dashboard)
     public function index()
     {
-        $evaluasis = Evaluasi::where('user_id', Auth::id())->latest()->get();
+        // For regular users, show only their evaluations
+        // For managers, show all evaluations
+        if (Auth::user()->isManager() || Auth::user()->isAdmin()) {
+            $evaluasis = Evaluasi::with('user')->latest()->get();
+        } else {
+            $evaluasis = Evaluasi::where('user_id', Auth::id())->latest()->get();
+        }
+
         return view('evaluasi.index', compact('evaluasis'));
     }
 
@@ -31,8 +43,16 @@ class EvaluasiController extends Controller
             'catatan' => 'nullable|string',
         ]);
 
+        // For managers and admins, they might be creating for other users
+        if (Auth::user()->isManager() || Auth::user()->isAdmin()) {
+            // If user_id is provided in the request, use that, otherwise use auth user
+            $userId = $request->has('user_id') ? $request->user_id : Auth::id();
+        } else {
+            $userId = Auth::id();
+        }
+
         Evaluasi::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'nama_tim' => $request->nama_tim,
             'efektivitas_sistem' => $request->efektivitas_sistem,
             'produktivitas_tim' => $request->produktivitas_tim,
@@ -40,5 +60,16 @@ class EvaluasiController extends Controller
         ]);
 
         return redirect()->route('evaluasi.index')->with('success', 'Evaluasi berhasil disimpan!');
+    }
+
+    // Display specific evaluation
+    public function show(Evaluasi $evaluasi)
+    {
+        // Authorize that the user can view this evaluation
+        if (!Auth::user()->isManager() && !Auth::user()->isAdmin() && $evaluasi->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized to view this evaluation');
+        }
+
+        return view('evaluasi.show', compact('evaluasi'));
     }
 }
