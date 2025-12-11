@@ -12,8 +12,8 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('evaluasi.index')" :active="request()->routeIs('evaluasi.index')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
+                        {{ __('Proyek Saya') }}
                     </x-nav-link>
 
                     @if(auth()->user()->isManager() || auth()->user()->isAdmin())
@@ -80,8 +80,8 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('evaluasi.index')" :active="request()->routeIs('evaluasi.index')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
+                {{ __('Proyek Saya') }}
             </x-responsive-nav-link>
 
             @if(auth()->user()->isManager() || auth()->user()->isAdmin())
