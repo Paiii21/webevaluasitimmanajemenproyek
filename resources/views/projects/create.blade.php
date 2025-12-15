@@ -34,22 +34,22 @@
                     <div class="border border-gray-300 dark:border-gray-700 rounded-lg p-6 mb-6">
                         <!-- Project Name -->
                         <div class="mb-6">
-                            <label for="nama_proyek" class="block text-sm font-semibold mb-2">
+                            <label for="name" class="block text-sm font-semibold mb-2">
                                 Nama Proyek <span class="text-red-600">*</span>
                             </label>
-                            <input type="text" name="nama_proyek" id="nama_proyek" value="{{ old('nama_proyek') }}" required placeholder="Masukkan nama proyek" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors @error('nama_proyek') border-red-600 @enderror">
-                            @error('nama_proyek')
+                            <input type="text" name="name" id="name" value="{{ old('name') }}" required placeholder="Masukkan nama proyek" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors @error('name') border-red-600 @enderror">
+                            @error('name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Project Description -->
                         <div class="mb-6">
-                            <label for="deskripsi" class="block text-sm font-semibold mb-2">
+                            <label for="description" class="block text-sm font-semibold mb-2">
                                 Deskripsi Proyek
                             </label>
-                            <textarea name="deskripsi" id="deskripsi" rows="5" placeholder="Jelaskan tujuan dan gambaran umum proyek ini..." class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors @error('deskripsi') border-red-600 @enderror">{{ old('deskripsi') }}</textarea>
-                            @error('deskripsi')
+                            <textarea name="description" id="description" rows="5" placeholder="Jelaskan tujuan dan gambaran umum proyek ini..." class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition-colors @error('description') border-red-600 @enderror">{{ old('description') }}</textarea>
+                            @error('description')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
