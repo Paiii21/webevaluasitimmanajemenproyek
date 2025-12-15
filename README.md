@@ -2,6 +2,16 @@
 
 Sistem Evaluasi Tim Manajemen Proyek adalah aplikasi berbasis web yang dirancang untuk membantu organisasi dalam mengelola dan mengevaluasi kinerja tim proyek. Aplikasi ini memungkinkan pengguna untuk membuat proyek, mengundang anggota tim, serta melakukan evaluasi terhadap kinerja tim secara efektif.
 
+##  Tim Pengembang
+
+| Peran | Nama | Tanggung Jawab |
+|-------|------|----------------|
+| *Project Manager* | Muh.Fahri Alamsyah_F55123099 | Koordinasi tim, pengawasan timeline, dokumentasi proyek |
+| *Frontend Developer* | Muh. Fahri Alamsyah_F55123099 | Implementasi tampilan web menggunakan Blade dan Bootstrap |
+| *Backend Developer* | Muh. Al Faiz_F55123085 | Pembuatan fitur CRUD |
+| *UI/UX Designer* | Muh. Rayyan Nazmuddin_F55123076 | Mendesain tampilan dan pengalaman pengguna di Figma |
+| *Database Enginer* | Dede Fauzan_F55123089 | Membuat dan mengontrol database |
+
 ## Fitur Utama
 
 - **Manajemen Akun Pengguna**: Registrasi, login, dan verifikasi email untuk pengguna baru
